@@ -1,0 +1,14 @@
+# If modifying this file, please modify .flowconfig-ci too!
+[ignore]
+
+[include]
+
+[libs]
+flow-typed
+
+[lints]
+
+[options]
+include_warnings=true
+
+[strict]

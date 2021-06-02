@@ -1,0 +1,16 @@
+# If modifying this file, please modify .flowconfig too!
+[ignore]
+
+[include]
+
+[libs]
+flow-typed
+
+[lints]
+
+[options]
+include_warnings=true
+server.max_workers=1
+types_first=false
+
+[strict]

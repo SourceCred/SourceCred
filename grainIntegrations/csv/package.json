@@ -1,0 +1,18 @@
+{
+  "name": "sc-grainIntegration-csv",
+  "version": "0.0.0",
+  "description": "print out a csv for each grain integration",
+  "main": "index.js",
+  "license": "(MIT OR Apache-2.0)",
+  "private": true,
+  "scripts": {
+    "unit": "BABEL_ENV=test NODE_ENV=test jest --env=jsdom",
+    "flow": "flow"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.135.0",
+    "jest": "^26.0.1",
+    "tmp": "^0.2.1"
+  },
+  "dependencies": {}
+}
