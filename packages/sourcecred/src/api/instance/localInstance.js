@@ -52,6 +52,8 @@ import {
   type PersonalAttributionsConfig,
   personalAttributionsConfigParser,
 } from "../config/personalAttributionsConfig";
+import type {GrainIntegrationOutput} from "../../core/ledger/grainIntegration";
+import type {Distribution} from "../../core/ledger/distribution";
 
 const DEPENDENCIES_PATH: $ReadOnlyArray<string> = [
   "config",
@@ -80,6 +82,10 @@ const GRAPHS_DIRECTORY: $ReadOnlyArray<string> = ["output", "graphs"];
 const GRAPHS_PATH: $ReadOnlyArray<string> = ["graph.json.gzip"];
 const LEDGER_PATH: $ReadOnlyArray<string> = ["data", "ledger.json"];
 const ACCOUNTS_PATH: $ReadOnlyArray<string> = ["output", "accounts.json"];
+const GRAIN_INTEGRATION_DIRECTORY: $ReadOnlyArray<string> = [
+  "output",
+  "grainIntegration",
+];
 
 /**
 This is an Instance implementation that reads and writes using relative paths
@@ -198,6 +204,23 @@ export class LocalInstance implements Instance {
     return loadFileWithDefault(this._storage, ledgerPath, () =>
       new Ledger().serialize()
     ).then((result) => Ledger.parse(result));
+  }
+
+  async writeGrainIntegrationOutput(
+    output: GrainIntegrationOutput,
+    distribution: Distribution
+  ): Promise<void> {
+    mkdirx(pathJoin(...GRAIN_INTEGRATION_DIRECTORY));
+    const credDateString = new Date(
+      distribution.credTimestamp
+      // utilise the `SE` datestring format since it appears like `YYYY-MM-DD`
+      // with numbers and is therefore easy to sort on and human-readable.
+    ).toLocaleDateString("en-SE");
+    const grainIntegrationPath = pathJoin(
+      ...GRAIN_INTEGRATION_DIRECTORY,
+      credDateString + "_" + output.fileName
+    );
+    this._storage.set(grainIntegrationPath, encode(output.content));
   }
 
   async writeGraphOutput(graphOutput: GraphOutput): Promise<void> {

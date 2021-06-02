@@ -1,5 +1,6 @@
 {
   "immediatePerWeek": 0,
   "balancedPerWeek": 1000,
-  "maxSimultaneousDistributions": 1
+  "maxSimultaneousDistributions": 1,
+  "integration": "csv"
 }

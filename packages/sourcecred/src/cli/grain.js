@@ -8,6 +8,7 @@ import * as G from "../core/ledger/grain";
 import {Instance} from "../api/instance/instance";
 import {LocalInstance} from "../api/instance/localInstance";
 import {grain} from "../api/main/grain";
+import {executeGrainIntegration} from "../core/ledger/grainIntegration";
 
 function die(std, message) {
   std.err("fatal: " + message);
@@ -44,6 +45,25 @@ const grainCommand: Command = async (args, std) => {
   grainInput.allowMultipleDistributionsPerInterval = allowMultipleDistributionsPerInterval;
 
   const {distributions, ledger} = await grain(grainInput);
+
+  const integrationCurrency = grainInput.currencyDetails.integrationCurrency;
+  const grainIntegration = grainInput.grainConfig.integration;
+  if (integrationCurrency && grainIntegration) {
+    distributions.forEach((distribution) => {
+      const result = executeGrainIntegration(
+        ledger,
+        grainIntegration.function,
+        distribution,
+        integrationCurrency,
+        false
+      );
+      if (result.grainIntegrationOutput)
+        instance.writeGrainIntegrationOutput(
+          result.grainIntegrationOutput,
+          distribution
+        );
+    });
+  }
 
   let totalDistributed = G.ZERO;
   const recipientIdentities = new Set();
