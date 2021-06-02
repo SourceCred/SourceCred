@@ -1,7 +1,7 @@
 // @flow
 
 import {
-  type GrainIntegration,
+  type GrainIntegrationFunction,
   executeGrainIntegration,
 } from "./grainIntegration";
 import {
@@ -74,10 +74,10 @@ describe("src/core/ledger/grainIntegration", () => {
         currency.chainId
       );
     });
-    const getmockIntegration: (?boolean) => GrainIntegration = (
+    const getmockIntegration: (?boolean) => GrainIntegrationFunction = (
       returnTransfers = false,
       returnOutput = false
-    ) => (distributions = [], currency) => {
+    ) => (distributions = [], _unused_config) => {
       const _ = currency;
       const transferResult = distributions.map(([payoutAddress, amount]) => ({
         payoutAddress,

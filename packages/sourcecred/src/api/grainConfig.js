@@ -10,7 +10,10 @@ import {
 import {fromInteger as toNonnegativeGrain} from "../core/ledger/nonnegativeGrain";
 import {toDiscount} from "../core/ledger/policies/recent";
 import {type Name, parser as nameParser} from "../core/identity/name";
-
+import {
+  type GrainIntegration,
+  parser as bundledGrainIntegrationParser,
+} from "./bundledGrainIntegrations";
 export type GrainConfig = {|
   +immediatePerWeek?: number, // (deprecated)
   +balancedPerWeek?: number, // (deprecated)
@@ -19,6 +22,8 @@ export type GrainConfig = {|
   +allocationPolicies?: $ReadOnlyArray<AllocationPolicy>,
   +maxSimultaneousDistributions?: number,
   +sinkIdentity?: Name,
+  +processDistributions?: boolean,
+  +integration?: GrainIntegration,
 |};
 
 export const parser: C.Parser<GrainConfig> = C.object(
@@ -31,6 +36,8 @@ export const parser: C.Parser<GrainConfig> = C.object(
     recentPerWeek: C.number,
     recentWeeklyDecayRate: C.number,
     sinkIdentity: nameParser,
+    processDistributions: C.boolean,
+    integration: bundledGrainIntegrationParser,
   }
 );
 

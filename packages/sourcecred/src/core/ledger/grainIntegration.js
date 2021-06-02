@@ -44,6 +44,7 @@ export type IntegrationConfig = {|
   // an interface should prompt admin interface users that they haven't
   // distributed funds via a configured integration
   processDistributions: boolean,
+  currency: Currency,
 |};
 
 /**
@@ -55,7 +56,10 @@ export type IntegrationConfig = {|
  * if accounting is enabled. Otherwise, grain balances will be tracked
  * elsewhere.
  */
-export type GrainIntegration = (PayoutDistributions, Currency) => PayoutResult;
+export type GrainIntegrationFunction = (
+  PayoutDistributions,
+  IntegrationConfig
+) => PayoutResult;
 
 ///////////////////
 // Helper functions
@@ -66,7 +70,7 @@ export type GrainIntegration = (PayoutDistributions, Currency) => PayoutResult;
 // sink identity
 export function executeGrainIntegration(
   ledger: Ledger,
-  integration: GrainIntegration,
+  integration: GrainIntegrationFunction,
   distribution: Distribution,
   currency: Currency,
   processDistributions: boolean,
@@ -85,7 +89,11 @@ export function executeGrainIntegration(
   // the fixed-point amount for some reason.
   let result;
   try {
-    result = integration(payoutDistributions, currency);
+    result = integration(payoutDistributions, {
+      currency,
+      accountingEnabled,
+      processDistributions,
+    });
     if (processDistributions) ledger.markDistributionExecuted(distribution.id);
   } catch (e) {
     throw new Error(`Grain Integration failed: ${e}`);

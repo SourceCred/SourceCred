@@ -3,6 +3,7 @@
 <PROJECT_ROOT>/node_modules/webpack-cli/lib/utils/__tests__/.*
 
 [include]
+../../grainIntegrations/
 
 [libs]
 flow-typed

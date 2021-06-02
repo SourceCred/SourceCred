@@ -2,7 +2,10 @@
 
 import * as C from "../util/combo";
 import * as NullUtil from "../util/null";
-
+import {
+  type Currency as IntegrationCurrency,
+  currencyParser as integrationCurrencyParser,
+} from "../core/ledger/currency";
 /**
  * Shape of currencyDetails.json on disk
  */
@@ -10,6 +13,7 @@ type SerializedCurrencyDetails = {|
   +currencyName?: string,
   +currencySuffix?: string,
   +decimalsToDisplay?: number,
+  +integrationCurrency?: IntegrationCurrency,
 |};
 
 /**
@@ -19,6 +23,7 @@ export type CurrencyDetails = {|
   +name: string,
   +suffix: string,
   +decimals: number,
+  +integrationCurrency?: IntegrationCurrency,
 |};
 
 export const DEFAULT_NAME = "Grain";
@@ -42,6 +47,7 @@ function upgrade(c: SerializedCurrencyDetails): CurrencyDetails {
     name: NullUtil.orElse(c.currencyName, DEFAULT_NAME),
     suffix: NullUtil.orElse(c.currencySuffix, DEFAULT_SUFFIX),
     decimals: NullUtil.orElse(c.decimalsToDisplay, DEFAULT_DECIMALS),
+    integrationCurrency: c.integrationCurrency,
   };
 }
 
@@ -60,6 +66,7 @@ export const parser: C.Parser<CurrencyDetails> = C.fmap(
       currencyName: C.string,
       currencySuffix: C.string,
       decimalsToDisplay: C.number,
+      integrationCurrency: integrationCurrencyParser,
     }
   ),
   upgrade
