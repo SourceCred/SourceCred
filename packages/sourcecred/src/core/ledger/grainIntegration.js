@@ -17,12 +17,18 @@ type Transfer = {|
 export type PayoutDistributions = Array<[PayoutAddress, G.Grain]>;
 export type PayoutAddressToId = Map<PayoutAddress, IdentityId>;
 export type TransferredGrain = Array<Transfer>;
+export type GrainIntegrationOutput = {|
+  fileName: string,
+  content: string,
+|};
 
 export type PayoutResult = {|
   // Amounts that are actually distributed by the integration.
   // If Grain balances are tracked in the ledger, these will be recorded as
   // transfers in the ledger to the "sink" Identity.
   transferredGrain: TransferredGrain,
+  // output files and content
+  outputFile?: GrainIntegrationOutput,
 |};
 
 export type IntegrationConfig = {|
@@ -49,7 +55,7 @@ export type IntegrationConfig = {|
  * if accounting is enabled. Otherwise, grain balances will be tracked
  * elsewhere.
  */
-export type GrainIntegration = (PayoutDistributions, Currency) => ?PayoutResult;
+export type GrainIntegration = (PayoutDistributions, Currency) => PayoutResult;
 
 ///////////////////
 // Helper functions
@@ -63,10 +69,12 @@ export function executeGrainIntegration(
   integration: GrainIntegration,
   distribution: Distribution,
   currency: Currency,
-  accountingEnabled: boolean,
   processDistributions: boolean,
-  sink?: IdentityId
-): Ledger {
+  sink?: IdentityId,
+  // TODO (@topocount) setup accounting config in ledger and remove this config
+  // which is just for proof-of-concept
+  accountingEnabled?: boolean = false
+): {ledger: Ledger, grainIntegrationOutput?: GrainIntegrationOutput} {
   const {payoutDistributions, payoutAddressToId} = buildDistributionIndexes(
     ledger,
     distribution,
@@ -96,7 +104,7 @@ export function executeGrainIntegration(
       });
     }
   }
-  return ledger;
+  return {ledger, grainIntegrationOutput: result.outputFile};
 }
 
 export function buildDistributionIndexes(

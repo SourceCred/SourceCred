@@ -75,25 +75,33 @@ describe("src/core/ledger/grainIntegration", () => {
       );
     });
     const getmockIntegration: (?boolean) => GrainIntegration = (
-      returnDistribution = false
-    ) => (distributions, currency) => {
+      returnTransfers = false,
+      returnOutput = false
+    ) => (distributions = [], currency) => {
       const _ = currency;
-      const result = distributions.map(([payoutAddress, amount]) => ({
+      const transferResult = distributions.map(([payoutAddress, amount]) => ({
         payoutAddress,
         amount,
         memo: "hello transfer",
       }));
-      if (returnDistribution) return {transferredGrain: result};
+      const result = returnTransfers
+        ? {transferredGrain: transferResult, outputFile: undefined}
+        : {transferredGrain: [], outputFile: undefined};
+      if (returnOutput)
+        result.outputFile = {
+          fileName: "testName.csv",
+          content: "this is a result from a grain integration.",
+        };
+      return result;
     };
     const currency = buildCurrency("BTC");
     it("can execute GrainIntegration that doesn't update the ledger", () => {
       const ledgerSnapshot = ledger.serialize();
-      const newLedger = executeGrainIntegration(
+      const {ledger: newLedger} = executeGrainIntegration(
         ledger,
         getmockIntegration(),
         distribution,
         currency,
-        true,
         true,
         sink
       );
@@ -112,12 +120,11 @@ describe("src/core/ledger/grainIntegration", () => {
     });
     it("doesn't transfer grain if processDistributions isn't set", () => {
       const ledgerSnapshot = ledger.serialize();
-      const newLedger = executeGrainIntegration(
+      const {ledger: newLedger} = executeGrainIntegration(
         ledger,
         getmockIntegration(true),
         distribution,
         currency,
-        true,
         false,
         sink
       );
@@ -126,14 +133,14 @@ describe("src/core/ledger/grainIntegration", () => {
     });
     it("doesn't transfer grain if a accounting isn't enabled", () => {
       const ledgerSnapshot = ledger.serialize();
-      const newLedger = executeGrainIntegration(
+      const {ledger: newLedger} = executeGrainIntegration(
         ledger,
         getmockIntegration(true),
         distribution,
         currency,
-        false,
         true,
-        sink
+        sink,
+        false
       );
       const result = diffLedger(newLedger, Ledger.parse(ledgerSnapshot));
       expect(result).toEqual([
@@ -150,12 +157,11 @@ describe("src/core/ledger/grainIntegration", () => {
     });
     it("doesn't transfer grain if a sink isn't set", () => {
       const ledgerSnapshot = ledger.serialize();
-      const newLedger = executeGrainIntegration(
+      const {ledger: newLedger} = executeGrainIntegration(
         ledger,
         getmockIntegration(true),
         distribution,
         currency,
-        true,
         true
       );
       const result = diffLedger(newLedger, Ledger.parse(ledgerSnapshot));
@@ -180,21 +186,20 @@ describe("src/core/ledger/grainIntegration", () => {
           distribution,
           currency,
           true,
-          true,
           sink
         );
       expect(thunk).toThrow("integration tracking not enabled");
     });
     it("updates the ledger when balances are returned by the integration", () => {
       const ledgerSnapshot = ledger.serialize();
-      const newLedger = executeGrainIntegration(
+      const {ledger: newLedger} = executeGrainIntegration(
         ledger,
         getmockIntegration(true),
         distribution,
         currency,
         true,
-        true,
-        sink
+        sink,
+        true
       );
       const result = diffLedger(newLedger, Ledger.parse(ledgerSnapshot));
       expect(result).toEqual([
