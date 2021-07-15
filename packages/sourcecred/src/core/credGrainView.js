@@ -37,6 +37,8 @@ import * as C from "../util/combo";
  * TimeScopedCredGrainView that generated this.
  */
 export type ParticipantCredGrain = {|
+  +active: boolean,
+  // Is the user active
   +identity: Identity,
   // Total Cred earned during the time scope.
   +cred: number,
@@ -56,6 +58,7 @@ export const credGrainViewParser: C.Parser<CredGrainView> = C.fmap(
   C.object({
     participants: C.array(
       C.object({
+        active: C.boolean,
         identity: identityParser,
         cred: C.number,
         credPerInterval: C.array(C.number),
@@ -185,6 +188,7 @@ export class CredGrainView {
           intervals
         );
         return {
+          active: account.active,
           identity: account.identity,
           cred: graphParticipant.cred,
           credPerInterval: graphParticipant.credPerInterval,
@@ -243,6 +247,7 @@ export class TimeScopedCredGrainView {
           exclusiveEndIndex
         );
         return {
+          active: participant.active,
           identity: participant.identity,
           cred: credPerInterval.reduce((a, b) => a + b, 0),
           credPerInterval,

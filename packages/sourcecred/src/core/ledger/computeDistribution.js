@@ -4,7 +4,7 @@ import * as uuid from "../../util/uuid";
 import {type TimestampMs} from "../../util/timestamp";
 import {type AllocationIdentity, computeAllocation} from "./grainAllocation";
 import {type AllocationPolicy} from "./policies";
-import {type CredAccountData} from "./credAccounts";
+import {type CredGrainView} from "../credGrainView";
 import {type Distribution} from "./distribution";
 
 /**
@@ -21,11 +21,11 @@ import {type Distribution} from "./distribution";
  */
 export function computeDistribution(
   policies: $ReadOnlyArray<AllocationPolicy>,
-  accountsData: CredAccountData,
+  credGrainData: CredGrainView,
   effectiveTimestamp: TimestampMs
 ): Distribution {
   const allocationIdentities = _allocationIdentities(
-    accountsData,
+    credGrainData,
     effectiveTimestamp
   );
   const allocations = policies.map((p) =>
@@ -40,20 +40,21 @@ export function computeDistribution(
 }
 
 export function _allocationIdentities(
-  accountsData: CredAccountData,
+  credGrainData: CredGrainView,
   effectiveTimestamp: TimestampMs
 ): $ReadOnlyArray<AllocationIdentity> {
-  const activeAccounts = accountsData.accounts.filter(
-    ({account}) => account.active
-  );
-  const allocationIdentities = activeAccounts.map((x) => ({
-    id: x.account.identity.id,
-    paid: x.account.paid,
-    cred: x.cred,
+  const activeParticipants = credGrainData
+    .participants()
+    .filter((participant) => participant.active);
+
+  const allocationIdentities = activeParticipants.map((x) => ({
+    id: x.identity.id,
+    paid: x.grainEarned,
+    cred: x.credPerInterval,
   }));
-  const numIntervals = accountsData.intervals.filter(
-    (x) => x.endTimeMs <= effectiveTimestamp
-  ).length;
+  const numIntervals = credGrainData
+    .intervals()
+    .filter((x) => x.endTimeMs <= effectiveTimestamp).length;
   const timeSlicedAllocationIdentities = allocationIdentities.map((x) => ({
     id: x.id,
     paid: x.paid,

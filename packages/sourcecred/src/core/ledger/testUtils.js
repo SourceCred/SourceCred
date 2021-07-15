@@ -24,6 +24,7 @@ export interface LedgerMock {
   identity1(id?: IdentityId): Identity;
   identity2(id?: IdentityId): Identity;
   ledgerWithIdentities(firstId?: IdentityId, secondId?: IdentityId): Ledger;
+  ledgerWithSingleIdentity(Id?: IdentityId): Ledger;
   ledgerWithActiveIdentities(
     firstId?: IdentityId,
     secondId?: IdentityId
@@ -96,6 +97,15 @@ export const createTestLedgerFixture = (
     return ledger;
   };
 
+  const ledgerWithSingleIdentity = (firstId: IdentityId = id1): Ledger => {
+    uuidMock.resetFakeUuid();
+    dateMock.resetFakeDate();
+    const ledger = new Ledger();
+    uuidMock.setNextUuid(firstId);
+    ledger.createIdentity("USER", "steven");
+    return ledger;
+  };
+
   const ledgerWithActiveIdentities = (
     firstId: IdentityId = id1,
     secondId: IdentityId = id2
@@ -111,6 +121,7 @@ export const createTestLedgerFixture = (
     identity2,
     ledgerWithIdentities,
     ledgerWithActiveIdentities,
+    ledgerWithSingleIdentity,
   };
 };
 

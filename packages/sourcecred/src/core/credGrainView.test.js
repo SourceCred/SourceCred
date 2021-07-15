@@ -72,6 +72,7 @@ describe("core/credGrainView", () => {
       const expectedIntervals = GraphUtil.intervals;
       const expectedParticipants = [
         {
+          active: true,
           identity: identity1(id1),
           cred: GraphUtil.expectedParticipant1.cred,
           credPerInterval: GraphUtil.expectedParticipant1.credPerInterval,
@@ -79,6 +80,7 @@ describe("core/credGrainView", () => {
           grainEarnedPerInterval: [g("13"), g("10")],
         },
         {
+          active: true,
           identity: identity2(id2),
           cred: GraphUtil.expectedParticipant2.cred,
           credPerInterval: GraphUtil.expectedParticipant2.credPerInterval,
@@ -108,6 +110,7 @@ describe("core/credGrainView", () => {
         ];
         const expectedParticipants = [
           {
+            active: true,
             identity: identity1(id1),
             cred: GraphUtil.expectedParticipant1.credPerInterval[1],
             credPerInterval: [
@@ -117,6 +120,7 @@ describe("core/credGrainView", () => {
             grainEarnedPerInterval: [g("10")],
           },
           {
+            active: true,
             identity: identity2(id2),
             cred: GraphUtil.expectedParticipant2.credPerInterval[1],
             credPerInterval: [
@@ -146,6 +150,7 @@ describe("core/credGrainView", () => {
         const expectedIntervals = [GraphUtil.intervals[0]];
         const expectedParticipants = [
           {
+            active: true,
             identity: identity1(id1),
             cred: GraphUtil.expectedParticipant1.credPerInterval[0],
             credPerInterval: [
@@ -155,6 +160,7 @@ describe("core/credGrainView", () => {
             grainEarnedPerInterval: [g("13")],
           },
           {
+            active: true,
             identity: identity2(id2),
             cred: GraphUtil.expectedParticipant2.credPerInterval[0],
             credPerInterval: [
@@ -184,6 +190,7 @@ describe("core/credGrainView", () => {
         const expectedIntervals = [GraphUtil.intervals[0]];
         const expectedParticipants = [
           {
+            active: true,
             identity: identity1(id1),
             cred: GraphUtil.expectedParticipant1.credPerInterval[0],
             credPerInterval: [
@@ -193,6 +200,7 @@ describe("core/credGrainView", () => {
             grainEarnedPerInterval: [g("13")],
           },
           {
+            active: true,
             identity: identity2(id2),
             cred: GraphUtil.expectedParticipant2.credPerInterval[0],
             credPerInterval: [
@@ -219,6 +227,7 @@ describe("core/credGrainView", () => {
         const expectedIntervals = [];
         const expectedParticipants = [
           {
+            active: true,
             identity: identity1(id1),
             cred: 0,
             credPerInterval: [],
@@ -226,6 +235,7 @@ describe("core/credGrainView", () => {
             grainEarnedPerInterval: [],
           },
           {
+            active: true,
             identity: identity2(id2),
             cred: 0,
             credPerInterval: [],
@@ -250,6 +260,7 @@ describe("core/credGrainView", () => {
         const expectedIntervals = [];
         const expectedParticipants = [
           {
+            active: true,
             identity: identity1(id1),
             cred: 0,
             credPerInterval: [],
@@ -257,6 +268,7 @@ describe("core/credGrainView", () => {
             grainEarnedPerInterval: [],
           },
           {
+            active: true,
             identity: identity2(id2),
             cred: 0,
             credPerInterval: [],
@@ -281,6 +293,7 @@ describe("core/credGrainView", () => {
         const expectedIntervals = [];
         const expectedParticipants = [
           {
+            active: true,
             identity: identity1(id1),
             cred: 0,
             credPerInterval: [],
@@ -288,6 +301,7 @@ describe("core/credGrainView", () => {
             grainEarnedPerInterval: [],
           },
           {
+            active: true,
             identity: identity2(id2),
             cred: 0,
             credPerInterval: [],
@@ -340,6 +354,7 @@ describe("core/credGrainView", () => {
       const expectedIntervals = GraphUtil.intervals;
       const expectedParticipants = [
         {
+          active: true,
           identity: identity1(id1),
           cred: GraphUtil.expectedParticipant1.cred,
           credPerInterval: GraphUtil.expectedParticipant1.credPerInterval,
@@ -347,6 +362,7 @@ describe("core/credGrainView", () => {
           grainEarnedPerInterval: [g("3"), g("0")],
         },
         {
+          active: true,
           identity: identity2(id2),
           cred: GraphUtil.expectedParticipant2.cred,
           credPerInterval: GraphUtil.expectedParticipant2.credPerInterval,
@@ -370,6 +386,7 @@ describe("core/credGrainView", () => {
         ];
         const expectedParticipants = [
           {
+            active: true,
             identity: identity1(id1),
             cred: GraphUtil.expectedParticipant1.credPerInterval[1],
             credPerInterval: [
@@ -379,6 +396,7 @@ describe("core/credGrainView", () => {
             grainEarnedPerInterval: [g("0")],
           },
           {
+            active: true,
             identity: identity2(id2),
             cred: GraphUtil.expectedParticipant2.credPerInterval[1],
             credPerInterval: [
@@ -415,6 +433,7 @@ describe("core/credGrainView", () => {
       const expectedIntervals = GraphUtil.intervals;
       const expectedParticipants = [
         {
+          active: true,
           identity: identity1(id1),
           cred: GraphUtil.expectedParticipant1.cred,
           credPerInterval: GraphUtil.expectedParticipant1.credPerInterval,
@@ -422,6 +441,7 @@ describe("core/credGrainView", () => {
           grainEarnedPerInterval: [g("0"), g("0")],
         },
         {
+          active: true,
           identity: identity2(id2),
           cred: GraphUtil.expectedParticipant2.cred,
           credPerInterval: GraphUtil.expectedParticipant2.credPerInterval,

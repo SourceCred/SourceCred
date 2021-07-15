@@ -6,9 +6,9 @@ import {type IntervalSequence, intervalSequence} from "../interval";
 import {Ledger} from "./ledger";
 import {type AllocationPolicy} from "./policies";
 import {CredGraph} from "../credrank/credGraph";
-import {computeCredAccounts} from "./credAccounts";
 import {computeDistribution} from "./computeDistribution";
 import {type Distribution} from "./distribution";
+import {CredGrainView} from "../credGrainView";
 
 export type DistributionPolicy = {|
   // Each distribution will include each of the specified allocation policies
@@ -57,10 +57,15 @@ export function applyDistributions(
   return distributionIntervals.map((interval) => {
     // Recompute for every endpoint because the Ledger will be in a different state
     // (wrt paid balances)
-    const accountsData = computeCredAccounts(ledger, credGraph);
+
+    //const accountsData = computeCredAccounts(ledger, credGraph);
+    const credGrainData = CredGrainView.fromCredGraphAndLedger(
+      credGraph,
+      ledger
+    );
     const distribution = computeDistribution(
       policy.allocationPolicies,
-      accountsData,
+      credGrainData,
       interval.endTimeMs
     );
     ledger.distributeGrain(distribution);
